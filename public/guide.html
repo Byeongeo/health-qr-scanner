@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR 점수 스캐너 — 설치 가이드 (초보 교사용)</title>
+<!--
+  ┌─────────────────────────────────────────────────────────────────┐
+  │  ★ 주최(연수) 선생님만 읽으세요 — 트레이니에게 배포하기 전에 1곳만 수정 │
+  │  아래 <script> 안 TEMPLATE_COPY_URL 의 따옴표 내용을                │
+  │  "본인 템플릿 시트의 사본 링크"로 바꾸세요.                          │
+  │  (시트 주소 끝의 /edit?... 부분을 /copy 로 바꾸면 사본 링크가 됩니다) │
+  └─────────────────────────────────────────────────────────────────┘
+-->
+<script>
+  const TEMPLATE_COPY_URL = "여기에_사본_링크_붙여넣기";
+</script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root{
+    --bg:#f4f6fb; --card:#fff; --ink:#1f2433; --muted:#6b7280;
+    --line:#e5e7eb; --brand:#2563eb; --brand2:#1e40af;
+    --ok:#0d9488; --warnbg:#fff7ed; --warn:#b45309; --warnline:#fdba74;
+    --dangerbg:#fef2f2; --danger:#b91c1c; --dangerline:#fca5a5;
+    --tipbg:#eff6ff; --tip:#1d4ed8; --tipline:#bfdbfe;
+  }
+  body{ font-family:"Noto Sans KR",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.7; padding:24px 14px 80px; }
+  .wrap{ max-width:820px; margin:0 auto; }
+
+  header.hero{ background:linear-gradient(135deg,#2563eb,#1e40af); color:#fff;
+    border-radius:20px; padding:30px 26px; box-shadow:0 10px 30px rgba(37,99,235,.25); }
+  header.hero h1{ font-size:1.7rem; margin-bottom:8px; }
+  header.hero p{ opacity:.92; font-size:1rem; }
+  .meta{ display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
+  .meta span{ background:rgba(255,255,255,.18); padding:5px 12px; border-radius:999px; font-size:.82rem; }
+
+  .card{ background:var(--card); border:1px solid var(--line); border-radius:16px;
+    padding:22px 22px; margin-top:18px; box-shadow:0 1px 2px rgba(0,0,0,.03); }
+  .card h2{ font-size:1.25rem; display:flex; align-items:center; gap:12px; margin-bottom:6px; }
+  .num{ flex:none; width:38px; height:38px; border-radius:50%; background:var(--brand); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.05rem; }
+  .card h2 .sub{ font-size:.8rem; color:var(--muted); font-weight:500; margin-left:auto; }
+
+  ol.steps{ margin:14px 0 4px; padding-left:0; counter-reset:s; list-style:none; }
+  ol.steps>li{ position:relative; padding:10px 0 10px 40px; border-top:1px dashed var(--line); }
+  ol.steps>li:first-child{ border-top:none; }
+  ol.steps>li::before{ counter-increment:s; content:counter(s); position:absolute; left:0; top:10px;
+    width:26px; height:26px; background:#eef2ff; color:var(--brand2); border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.85rem; }
+  .k{ display:inline-block; background:#eef2ff; color:var(--brand2); border:1px solid #c7d2fe;
+    border-radius:7px; padding:1px 8px; font-weight:700; font-size:.92em; white-space:nowrap; }
+  .path{ color:var(--muted); font-weight:600; }
+  code{ background:#f1f5f9; border:1px solid #e2e8f0; border-radius:6px; padding:1px 7px;
+    font-family:ui-monospace,Consolas,monospace; font-size:.9em; word-break:break-all; }
+
+  .callout{ border-radius:12px; padding:13px 15px; margin:14px 0; font-size:.95rem; border:1px solid; }
+  .warn{ background:var(--warnbg); border-color:var(--warnline); color:#7c2d12; }
+  .danger{ background:var(--dangerbg); border-color:var(--dangerline); color:#7f1d1d; }
+  .tip{ background:var(--tipbg); border-color:var(--tipline); color:#1e3a8a; }
+  .callout b{ display:block; margin-bottom:3px; }
+
+  .btn{ display:inline-flex; align-items:center; gap:8px; background:var(--brand); color:#fff;
+    text-decoration:none; padding:12px 20px; border-radius:11px; font-weight:700; font-size:1rem;
+    margin:10px 0; box-shadow:0 4px 14px rgba(37,99,235,.3); }
+  .btn.ghost{ background:#fff; color:var(--brand2); border:2px solid var(--brand); box-shadow:none; }
+  .deploybtn img{ height:34px; vertical-align:middle; }
+
+  .prep{ background:#0f172a; color:#e2e8f0; border-radius:16px; padding:20px 22px; margin-top:18px; }
+  .prep h2{ color:#fff; font-size:1.1rem; margin-bottom:8px; }
+  .prep ul{ margin-left:18px; } .prep li{ margin:4px 0; }
+
+  ul.check{ list-style:none; margin-top:8px; }
+  ul.check li{ padding:6px 0 6px 30px; position:relative; }
+  ul.check li::before{ content:"☐"; position:absolute; left:0; font-size:1.2rem; color:var(--brand); top:2px; }
+
+  .faq dt{ font-weight:700; margin-top:12px; color:var(--brand2); }
+  .faq dd{ margin-left:0; color:#374151; }
+  footer{ text-align:center; color:var(--muted); font-size:.85rem; margin-top:30px; }
+  .pill{ font-size:.72rem; background:#dcfce7; color:#166534; border-radius:999px; padding:2px 9px; font-weight:700; }
+  @media print{ body{background:#fff;} .card,.prep{box-shadow:none;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <h1>📷 QR 점수 스캐너 — 설치 가이드</h1>
+    <p>학생이 QR(학번)을 카메라에 대면 점수가 쌓이고, 음성·화면으로 안내되는 우리 반 점수판을 만듭니다.</p>
+    <div class="meta">
+      <span>⏱️ 약 20~30분</span>
+      <span>💸 전부 무료</span>
+      <span>🧑‍💻 코딩 지식 필요 없음</span>
+    </div>
+  </header>
+
+  <div class="callout tip" style="margin-top:18px">
+    <b>준비물</b>
+    ① 구글 계정(학교 계정 OK) · ② <b>크롬(Chrome)</b> 브라우저 · ③ 웹캠 달린 데스크톱이나 태블릿 ·
+    ④ 학생 학번·이름 명단
+  </div>
+
+  <div class="card">
+    <h2><span class="num">✓</span> 전체 흐름 한눈에</h2>
+    <ul class="check">
+      <li><b>1단계</b> 구글 시트 <b>사본 만들기</b> (내 점수판 시트 생성)</li>
+      <li><b>2단계</b> 시트 속 <b>Apps Script 웹앱 배포</b> → 내 <b>주소</b> 받기</li>
+      <li><b>3단계</b> <b>Deploy 버튼</b>으로 내 <b>Vercel 앱</b> 만들기 (주소 붙여넣기)</li>
+      <li><b>4단계</b> 학생 <b>학번·이름 입력</b> → QR 자동 생성 → 인쇄</li>
+      <li><b>5단계</b> 교실 기기에서 열고 <b>테스트</b></li>
+    </ul>
+  </div>
+
+  <!-- 1단계 -->
+  <div class="card">
+    <h2><span class="num">1</span> 구글 시트 사본 만들기 <span class="sub">약 1분</span></h2>
+    <ol class="steps">
+      <li>아래 버튼을 누릅니다. (연수 선생님이 준 링크입니다)
+        <div><a class="btn" id="copyBtn" href="#">📋 점수판 시트 사본 만들기</a></div>
+      </li>
+      <li>창이 뜨면 <span class="k">사본 만들기</span> 를 누릅니다.</li>
+      <li>내 구글 드라이브에 <b>“…의 사본”</b> 시트가 생기고 자동으로 열립니다. 이게 <b>내 점수판</b>입니다.</li>
+    </ol>
+    <div class="callout tip"><b>참고</b> 사본을 만들면 안에 들어있는 프로그램(코드)과 탭(student list 등)이 <b>그대로 같이 복사</b>됩니다. 따로 만들 게 없어요.</div>
+  </div>
+
+  <!-- 2단계 -->
+  <div class="card">
+    <h2><span class="num">2</span> 시트 속 프로그램을 “웹앱”으로 배포 <span class="sub">약 5분 · 한 번만</span></h2>
+    <ol class="steps">
+      <li>방금 만든 사본 시트의 상단 메뉴에서 <span class="path">확장 프로그램 → Apps Script</span> 를 누릅니다. (새 탭이 열립니다)</li>
+      <li>오른쪽 위 파란 버튼 <span class="k">배포</span> → <span class="k">새 배포</span> 를 누릅니다.</li>
+      <li>왼쪽 위 톱니바퀴(⚙️ <span class="path">유형 선택</span>)를 누르고 <span class="k">웹 앱</span> 을 고릅니다.</li>
+      <li>설정을 이렇게 맞춥니다:
+        <div style="margin-top:6px">
+          • 설명: 아무거나 (예: <code>QR스캐너</code>)<br>
+          • 실행 계정(다음 사용자로 실행): <span class="k">나</span><br>
+          • 액세스 권한(액세스 권한이 있는 사용자): <span class="k">모든 사용자</span>
+        </div>
+      </li>
+      <li><span class="k">배포</span> 를 누릅니다.</li>
+      <li><b>권한 승인</b> 창이 뜹니다 → <span class="k">액세스 승인</span> → 내 구글 계정 선택.</li>
+      <li>“Google에서 확인하지 않은 앱” 경고가 나오면(정상입니다, 내가 만든 거라 안전):
+        <div style="margin-top:6px">→ 왼쪽 아래 <span class="k">고급</span> → <span class="k">(프로젝트 이름)(으)로 이동</span> → <span class="k">허용</span></div>
+      </li>
+      <li>완료되면 <b>웹 앱 URL</b>이 나옵니다. <code>https://script.google.com/macros/s/……/exec</code> 형태죠.
+        <b>이 주소를 복사</b>해서 메모장 등에 잠깐 붙여두세요. (3단계에서 씁니다)</li>
+    </ol>
+    <div class="callout danger"><b>꼭 확인!</b> 액세스 권한이 <b>“모든 사용자”</b>여야 합니다. “모든 Google 사용자”나 “나만”으로 하면 앱이 작동하지 않습니다.</div>
+    <div class="callout warn"><b>주소가 /exec 로 끝나야 함</b> — 주소 끝이 <code>/dev</code>가 아니라 <code>/exec</code>인지 확인하세요.</div>
+  </div>
+
+  <!-- 3단계 -->
+  <div class="card">
+    <h2><span class="num">3</span> 내 Vercel 앱 만들기 (Deploy 버튼) <span class="sub">약 8분 · 한 번만</span></h2>
+    <ol class="steps">
+      <li>아래 <b>Deploy</b> 버튼을 누릅니다.
+        <div><a class="deploybtn" target="_blank" rel="noopener"
+          href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FByeongeo%2Fhealth-qr-scanner&env=APPS_SCRIPT_URL&envDescription=Apps%20Script%20web%20app%20URL%20(%2Fexec)&project-name=health-qr-scanner&repository-name=health-qr-scanner">
+          <img src="https://vercel.com/button" alt="Deploy with Vercel"></a></div>
+      </li>
+      <li>Vercel 로그인 화면이 나옵니다 → <span class="k">Continue with GitHub</span>.
+        처음이면 GitHub 가입(무료) → Vercel 가입까지 한 번에 진행됩니다.</li>
+      <li>“Create Git Repository” 단계 → GitHub 선택하고 그대로 <span class="k">Create</span>.
+        (내 GitHub에 코드 사본이 하나 생깁니다 — 신경 안 써도 됩니다)</li>
+      <li><b>환경 변수(Environment Variables)</b> 입력 칸이 나옵니다. ⭐가장 중요⭐
+        <div style="margin-top:6px">
+          • <b>Key</b>(이름): <code>APPS_SCRIPT_URL</code> (이미 채워져 있을 수 있음)<br>
+          • <b>Value</b>(값): <b>2단계에서 복사한 /exec 주소</b>를 붙여넣기
+        </div>
+      </li>
+      <li><span class="k">Deploy</span> 를 누르고 1~2분 기다립니다.</li>
+      <li>“Congratulations!” 화면이 뜨면 끝! <span class="k">Continue to Dashboard</span> 또는 미리보기를 눌러
+        <b>내 앱 주소</b>(예: <code>health-qr-scanner-xxxx.vercel.app</code>)를 확인합니다.
+        이 주소를 <b>교실 기기에서 즐겨찾기</b> 해두세요.</li>
+    </ol>
+    <div class="callout danger"><b>환경 변수를 빼먹으면</b> 스캔할 때 “서버에 연결하지 못했습니다”가 뜹니다.
+      그땐 Vercel → 내 프로젝트 → <span class="path">Settings → Environment Variables</span> 에서
+      <code>APPS_SCRIPT_URL</code> 추가 후 <span class="path">Deployments</span>에서 <b>Redeploy</b> 하면 됩니다.</div>
+  </div>
+
+  <!-- 4단계 -->
+  <div class="card">
+    <h2><span class="num">4</span> 학생 등록 + QR 인쇄 <span class="sub">약 5분</span></h2>
+    <ol class="steps">
+      <li>1단계의 <b>내 점수판 시트</b>로 돌아갑니다.</li>
+      <li><span class="k">student list</span> 탭에서 예시 2명(홍길동·김보건)을 지우고,
+        <b>A열에 학번 · B열에 이름</b>을 입력합니다.</li>
+      <li>학번을 입력하면 <b>C열에 QR이 자동으로 생깁니다.</b> (외부 사이트 필요 없음)</li>
+      <li>C열을 <b>인쇄</b>해서 학생별로 잘라 나눠주거나, 학생증/이름표에 붙입니다.</li>
+    </ol>
+    <div class="callout tip"><b>QR 안에는 “학번”만 들어갑니다.</b> 그래서 학생이 그 QR을 카메라에 대면 누구인지 바로 인식돼요.</div>
+  </div>
+
+  <!-- 5단계 -->
+  <div class="card">
+    <h2><span class="num">5</span> 교실에서 사용·테스트 <span class="sub">약 3분</span></h2>
+    <ol class="steps">
+      <li>웹캠 달린 기기의 <b>크롬</b>에서 <b>내 Vercel 앱 주소</b>를 엽니다.</li>
+      <li>화면을 <b>한 번 클릭</b>(=나중에 풋마우스 밟기) → <b>카메라 권한 “허용”</b>.</li>
+      <li>학생 QR(또는 시트 C열 QR을 휴대폰에 띄워)을 카메라에 댑니다.</li>
+      <li>“삑” 소리 + 음성 <b>“○○○ 학생, 10점이 가산되어 총 △△점입니다”</b> + 화면에 크게 표시되면 성공! 🎉</li>
+    </ol>
+    <div class="callout tip"><b>풋마우스(발판)</b>를 쓰면 화면 클릭 대신 발로 밟아 카메라를 켤 수 있습니다.
+      발판이 보내는 신호에 맞춰 시트 <code>config</code> 탭의 <b>트리거키</b>만 바꾸면 됩니다.</div>
+  </div>
+
+  <!-- 점수/멘트 바꾸기 -->
+  <div class="card">
+    <h2><span class="num">⚙</span> 점수·멘트 바꾸기 <span class="sub">선택</span></h2>
+    <p>모두 <b>시트에서</b> 바꿉니다. 코드는 건드릴 필요 없습니다.</p>
+    <ol class="steps">
+      <li><span class="k">config</span> 탭 — <code>회당가점</code>(1회 몇 점), <code>쿨다운초</code>(연속 적립 방지), <code>미등록처리</code> 등.</li>
+      <li><span class="k">messages</span> 탭 — 점수대별 음성 멘트.
+        <div style="margin-top:6px">
+          • <b>임계점수</b>: 이 점수 이상일 때<br>
+          • <b>멘트</b>: 들려줄 말 (<code>{이름}</code> 자리에 학생 이름이 들어감)<br>
+          • <b>1회만</b>: <code>Y</code>면 그 점수를 <b>처음 넘을 때 한 번만</b>(예: “선물 받아가세요”), <code>N</code>이면 그 점수대에서 <b>매번</b>(예: “잘했어요”)
+        </div>
+      </li>
+    </ol>
+  </div>
+
+  <!-- 문제 해결 -->
+  <div class="card">
+    <h2><span class="num">？</span> 문제 해결</h2>
+    <dl class="faq">
+      <dt>소리가 안 나요</dt>
+      <dd>기기 음량·브라우저 탭 음소거를 확인하세요. 크롬을 권장합니다(한국어 음성이 가장 잘 나옵니다).</dd>
+      <dt>카메라가 안 켜져요</dt>
+      <dd>주소창 오른쪽 카메라 아이콘을 눌러 “허용”으로 바꾸세요. 그리고 화면을 한 번 클릭(밟기)해야 켜집니다.</dd>
+      <dt>“서버에 연결하지 못했습니다”</dt>
+      <dd>3단계 <b>환경 변수</b>(APPS_SCRIPT_URL)가 빠졌거나 주소가 틀렸습니다. Vercel Settings에서 확인 후 Redeploy 하세요.</dd>
+      <dt>“등록되지 않은 학번입니다”</dt>
+      <dd>그 QR의 학번이 <code>student list</code> A열에 없습니다. 학번을 추가하거나 철자를 확인하세요.</dd>
+      <dt>탭(student list 등)이 안 보여요</dt>
+      <dd>시트를 새로고침한 뒤 상단 메뉴 <span class="k">QR 점수 스캐너 → 초기 설정</span> 을 한 번 누르세요. 탭이 자동으로 만들어집니다.</dd>
+      <dt>“Apps Script 응답을 해석할 수 없습니다”</dt>
+      <dd>2단계 배포의 <b>액세스 권한</b>이 “모든 사용자”인지, 주소가 <code>/exec</code>로 끝나는지 확인하세요.</dd>
+    </dl>
+  </div>
+
+  <footer>
+    QR 점수 스캐너 · 보건교육용 &nbsp;|&nbsp; 문제가 생기면 연수 담당 선생님께 이 화면을 보여주세요.
+  </footer>
+</div>
+
+<script>
+  (function(){
+    var btn = document.getElementById('copyBtn');
+    if(!btn) return;
+    if(TEMPLATE_COPY_URL && TEMPLATE_COPY_URL.indexOf('http')===0){
+      btn.href = TEMPLATE_COPY_URL; btn.target = "_blank"; btn.rel = "noopener";
+    } else {
+      btn.addEventListener('click', function(e){
+        e.preventDefault();
+        alert('연수 담당 선생님이 아직 시트 사본 링크를 넣지 않았습니다.\n(가이드 파일의 TEMPLATE_COPY_URL 수정 필요)');
+      });
+    }
+  })();
+</script>
+</body>
+</html>

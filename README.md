@@ -6,6 +6,13 @@
 카메라가 막히는 Apps Script 화면 대신 **Vercel(Next.js)** 에서 화면을 띄우고,
 데이터 처리는 시트에 붙여넣은 **Apps Script**(= 백엔드)가 맡고, 저장은 **Google Sheets**.
 
+## 🚀 한 번에 배포 (교사용)
+아래 버튼 → GitHub 로그인 → 환경변수 `APPS_SCRIPT_URL`(시트 웹앱 `/exec` 주소) 입력 → Deploy.
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FByeongeo%2Fhealth-qr-scanner&env=APPS_SCRIPT_URL&envDescription=Apps%20Script%20web%20app%20URL%20(%2Fexec)&project-name=health-qr-scanner&repository-name=health-qr-scanner)
+
+> 초보 교사용 **상세 설치 가이드**: [`public/guide.html`](public/guide.html) — 배포되면 `https://<내앱>.vercel.app/guide.html` 에서 열립니다.
+
 ## 구조
 ```
 브라우저(Vercel 카메라 페이지)
