@@ -88,7 +88,7 @@
     <h1>📷 QR 점수 스캐너 — 설치 가이드</h1>
     <p>학생이 QR(학번)을 카메라에 대면 점수가 쌓이고, 음성·화면으로 안내되는 우리 반 점수판을 만듭니다.</p>
     <div class="meta">
-      <span>⏱️ 약 20~30분</span>
+      <span>⏱️ 약 30~40분</span>
       <span>💸 전부 무료</span>
       <span>🧑‍💻 코딩 지식 필요 없음</span>
     </div>
@@ -105,9 +105,10 @@
     <ul class="check">
       <li><b>1단계</b> 구글 시트 <b>사본 만들기</b> (내 점수판 시트 생성)</li>
       <li><b>2단계</b> 시트 속 <b>Apps Script 웹앱 배포</b> → 내 <b>주소</b> 받기</li>
-      <li><b>3단계</b> <b>Deploy 버튼</b>으로 내 <b>Vercel 앱</b> 만들기 (주소 붙여넣기)</li>
-      <li><b>4단계</b> 학생 <b>학번·이름 입력</b> → QR 자동 생성 → 인쇄</li>
-      <li><b>5단계</b> 교실 기기에서 열고 <b>테스트</b></li>
+      <li><b>3단계</b> <b>GitHub 계정 만들기</b> (처음이면 · 다음 단계 로그인용)</li>
+      <li><b>4단계</b> <b>Deploy 버튼</b>으로 내 <b>Vercel 앱</b> 만들기 (주소 붙여넣기)</li>
+      <li><b>5단계</b> 학생 <b>학번·이름 입력</b> → QR 자동 생성 → 인쇄</li>
+      <li><b>6단계</b> 교실 기기에서 열고 <b>테스트</b></li>
     </ul>
   </div>
 
@@ -150,17 +151,40 @@
     <div class="callout warn"><b>주소가 /exec 로 끝나야 함</b> — 주소 끝이 <code>/dev</code>가 아니라 <code>/exec</code>인지 확인하세요.</div>
   </div>
 
-  <!-- 3단계 -->
+  <!-- 3단계: GitHub 가입 -->
   <div class="card">
-    <h2><span class="num">3</span> 내 Vercel 앱 만들기 (Deploy 버튼) <span class="sub">약 8분 · 한 번만</span></h2>
+    <h2><span class="num">3</span> GitHub 계정 만들기 <span class="sub">약 7분 · 처음이면</span></h2>
+    <p>다음 4단계(Vercel)에서 로그인에 필요합니다. <b>이미 GitHub 계정이 있으면 이 단계는 건너뛰세요.</b></p>
+    <ol class="steps">
+      <li>가입 페이지를 엽니다.
+        <div><a class="btn ghost" href="https://github.com/signup" target="_blank" rel="noopener">GitHub 가입 페이지 열기 ↗</a></div>
+      </li>
+      <li><b>이메일</b> 입력 → <span class="k">Continue</span>.
+        <div style="margin-top:6px">학교 이메일도 됩니다. 인증코드를 받아야 하니 <b>그 메일함을 열 수 있어야</b> 해요.</div>
+      </li>
+      <li><b>비밀번호</b>를 만들고 → <span class="k">Continue</span>.</li>
+      <li><b>사용자 이름(Username)</b>을 정하고 → <span class="k">Continue</span>.
+        <div style="margin-top:6px">영문·숫자로, 남이 안 쓴 이름이어야 합니다(예: <code>health-kim2026</code>). <b>꼭 적어두세요</b> — 다음 단계에서 씁니다.</div>
+      </li>
+      <li>광고메일 수신 여부에 <code>y</code> 또는 <code>n</code> 입력 → <span class="k">Continue</span>.</li>
+      <li><b>“사람인지 확인”</b> 퍼즐을 풉니다 → <span class="k">Create account</span>.</li>
+      <li>입력한 이메일로 온 <b>인증 코드(숫자)</b>를 입력합니다.</li>
+      <li>가입 직후 설문/요금제 화면이 나오면 <b>무료(Free)</b>를 고르거나 <span class="k">Skip</span> 으로 건너뜁니다. 완료! 🎉</li>
+    </ol>
+    <div class="callout tip"><b>Vercel은 따로 가입하지 않아도 됩니다.</b> 다음 단계에서 “Continue with GitHub”를 누르면 이 GitHub 계정으로 Vercel까지 자동 로그인돼요.</div>
+  </div>
+
+  <!-- 4단계 -->
+  <div class="card">
+    <h2><span class="num">4</span> 내 Vercel 앱 만들기 (Deploy 버튼) <span class="sub">약 8분 · 한 번만</span></h2>
     <ol class="steps">
       <li>아래 <b>Deploy</b> 버튼을 누릅니다.
         <div><a class="deploybtn" target="_blank" rel="noopener"
           href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FByeongeo%2Fhealth-qr-scanner&env=APPS_SCRIPT_URL&envDescription=Apps%20Script%20web%20app%20URL%20(%2Fexec)&project-name=health-qr-scanner&repository-name=health-qr-scanner">
           <img src="https://vercel.com/button" alt="Deploy with Vercel"></a></div>
       </li>
-      <li>Vercel 로그인 화면이 나옵니다 → <span class="k">Continue with GitHub</span>.
-        처음이면 GitHub 가입(무료) → Vercel 가입까지 한 번에 진행됩니다.</li>
+      <li>Vercel 로그인 화면 → <span class="k">Continue with GitHub</span> (3단계에서 만든 GitHub 계정으로 로그인).
+        GitHub가 “Authorize Vercel” 또는 “Install” 을 물으면 눌러서 <b>허용</b>합니다.</li>
       <li>“Create Git Repository” 단계 → GitHub 선택하고 그대로 <span class="k">Create</span>.
         (내 GitHub에 코드 사본이 하나 생깁니다 — 신경 안 써도 됩니다)</li>
       <li><b>환경 변수(Environment Variables)</b> 입력 칸이 나옵니다. ⭐가장 중요⭐
@@ -179,9 +203,9 @@
       <code>APPS_SCRIPT_URL</code> 추가 후 <span class="path">Deployments</span>에서 <b>Redeploy</b> 하면 됩니다.</div>
   </div>
 
-  <!-- 4단계 -->
+  <!-- 5단계 -->
   <div class="card">
-    <h2><span class="num">4</span> 학생 등록 + QR 인쇄 <span class="sub">약 5분</span></h2>
+    <h2><span class="num">5</span> 학생 등록 + QR 인쇄 <span class="sub">약 5분</span></h2>
     <ol class="steps">
       <li>1단계의 <b>내 점수판 시트</b>로 돌아갑니다.</li>
       <li><span class="k">student list</span> 탭에서 예시 2명(홍길동·김보건)을 지우고,
@@ -192,9 +216,9 @@
     <div class="callout tip"><b>QR 안에는 “학번”만 들어갑니다.</b> 그래서 학생이 그 QR을 카메라에 대면 누구인지 바로 인식돼요.</div>
   </div>
 
-  <!-- 5단계 -->
+  <!-- 6단계 -->
   <div class="card">
-    <h2><span class="num">5</span> 교실에서 사용·테스트 <span class="sub">약 3분</span></h2>
+    <h2><span class="num">6</span> 교실에서 사용·테스트 <span class="sub">약 3분</span></h2>
     <ol class="steps">
       <li>웹캠 달린 기기의 <b>크롬</b>에서 <b>내 Vercel 앱 주소</b>를 엽니다.</li>
       <li>화면을 <b>한 번 클릭</b>(=나중에 풋마우스 밟기) → <b>카메라 권한 “허용”</b>.</li>
