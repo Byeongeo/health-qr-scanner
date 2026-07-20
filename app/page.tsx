@@ -248,8 +248,16 @@ export default function Station() {
       if (e.repeat) return; // 페달을 꾹 밟아 키가 자동 반복돼도 1회만 인식
       const st = statusRef.current;
       if (st !== "idle" && st !== "result") return;
-      const key = (cfgRef.current.triggerKey ?? "").trim().toLowerCase();
-      if (!key || e.code.toLowerCase() === key || e.key.toLowerCase() === key) {
+      const want = (cfgRef.current.triggerKey ?? "").trim().toLowerCase();
+      const code = e.code.toLowerCase();
+      // e.code(물리 키)는 한/영 IME 상태와 무관 — 한글 상태에서 b가 'ㅠ'/'Process'로 와도 KeyB로 매칭됨
+      const matched =
+        !want ||
+        code === want || // "space", "enter", "f13", "keyb" 처럼 코드명 그대로 적은 경우
+        code === "key" + want || // 영문 한 글자(b → KeyB)
+        code === "digit" + want || // 숫자 한 글자(1 → Digit1)
+        e.key.toLowerCase() === want; // 그 외 문자 일치(폴백)
+      if (matched) {
         e.preventDefault();
         if (st === "result") skipResultAndArm();
         else void arm();
