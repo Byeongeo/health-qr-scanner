@@ -26,6 +26,7 @@ export default function Station() {
   const armIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const resultTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const acRef = useRef<AudioContext | null>(null);
+  const armingRef = useRef(false); // 카메라 여는 도중(getUserMedia 대기) 중복 arm 방지
 
   // 최신 status 를 콜백/루프에서 참조
   const statusRef = useRef<Status>("idle");
@@ -185,7 +186,8 @@ export default function Station() {
   }, [handleScan]);
 
   const arm = useCallback(async () => {
-    if (statusRef.current !== "idle") return;
+    if (statusRef.current !== "idle" || armingRef.current) return;
+    armingRef.current = true;
     setWarn("");
     ensureAudio(); // 사용자 동작 시점에 오디오 권한 확보
     try {
@@ -198,6 +200,7 @@ export default function Station() {
       video.srcObject = stream;
       await video.play();
 
+      armingRef.current = false;
       setStatus("armed");
       const secs = cfgRef.current.cameraTimeoutSec;
       setCount(secs);
@@ -215,6 +218,7 @@ export default function Station() {
         }
       }, secs * 1000);
     } catch {
+      armingRef.current = false;
       setWarn("카메라를 열 수 없습니다. 브라우저 카메라 권한을 허용해 주세요.");
       stopCamera();
       setStatus("idle");
@@ -241,10 +245,11 @@ export default function Station() {
   // 트리거: 키(설정값) — 아무 클릭은 onStageClick 에서 처리
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (e.repeat) return; // 페달을 꾹 밟아 키가 자동 반복돼도 1회만 인식
       const st = statusRef.current;
       if (st !== "idle" && st !== "result") return;
-      const key = cfgRef.current.triggerKey?.trim();
-      if (!key || e.code === key || e.key === key) {
+      const key = (cfgRef.current.triggerKey ?? "").trim().toLowerCase();
+      if (!key || e.code.toLowerCase() === key || e.key.toLowerCase() === key) {
         e.preventDefault();
         if (st === "result") skipResultAndArm();
         else void arm();
