@@ -221,19 +221,38 @@ export default function Station() {
     }
   }, [ensureAudio, tick, stopCamera]);
 
+  // 결과 화면에서 밟으면 결과를 닫고 바로 다음 카메라 켜기 (한 번 밟기 = 다음 스캔)
+  const skipResultAndArm = useCallback(() => {
+    if (resultTimerRef.current) {
+      clearTimeout(resultTimerRef.current);
+      resultTimerRef.current = null;
+    }
+    try {
+      window.speechSynthesis?.cancel(); // 이전 학생 음성은 여기서 끊고 새 스캔으로
+    } catch {
+      /* noop */
+    }
+    setResult(null);
+    statusRef.current = "idle"; // arm() 의 idle 가드를 즉시 통과시키기 위해 ref 먼저 갱신
+    setStatus("idle");
+    void arm();
+  }, [arm]);
+
   // 트리거: 키(설정값) — 아무 클릭은 onStageClick 에서 처리
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (statusRef.current !== "idle") return;
+      const st = statusRef.current;
+      if (st !== "idle" && st !== "result") return;
       const key = cfgRef.current.triggerKey?.trim();
       if (!key || e.code === key || e.key === key) {
         e.preventDefault();
-        void arm();
+        if (st === "result") skipResultAndArm();
+        else void arm();
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [arm]);
+  }, [arm, skipResultAndArm]);
 
   // 언마운트 정리
   useEffect(() => {
@@ -245,7 +264,7 @@ export default function Station() {
 
   const onStageClick = () => {
     if (statusRef.current === "idle") void arm();
-    else if (statusRef.current === "result") finishToIdle(); // 다음 학생 위해 빨리 넘기기
+    else if (statusRef.current === "result") skipResultAndArm(); // 밟으면 바로 다음 카메라
   };
 
   return (
